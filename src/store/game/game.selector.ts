@@ -2,23 +2,39 @@ import { createSelector } from 'reselect';
 
 import { RootState } from '../store';
 
-import { GameState } from './game.reducer';
-import { AppScreens } from './game.types';
+import { AppState } from './game.reducer';
+import { AppScreens, GamePlayerState, GameScreen } from './game.types';
+import { getScreenForState } from '../../utils/game.utils';
 
-const selectGameStateReducer = (state: RootState): GameState => state.app;
+const selectAppStateReducer = (state: RootState): AppState => state.app;
 
 export const selectCurrentUser = createSelector(
-    [selectGameStateReducer],
-    (gameState) => gameState.currentUser
+    [selectAppStateReducer],
+    (AppState) => AppState.currentUser
 )
 
 export const selectRoomID = createSelector(
-    [selectGameStateReducer],
-    (gameState) => gameState.roomID
+    [selectAppStateReducer],
+    (AppState) => AppState.roomID
 )
 export const selectRoom = createSelector(
-    [selectGameStateReducer],
-    (gameState) => gameState.room
+    [selectAppStateReducer],
+    (AppState) => AppState.room
+)
+
+export const isCurrentUserAliveSelector = createSelector(
+    [selectCurrentUser, selectRoom],
+    (currentUser, room) => {
+        if (!currentUser) {
+            return false
+        }
+        const aliveUserIDs = (room && room.game && 
+        Object.values(room.game.gamePlayers)
+        .filter(o => o.state === GamePlayerState.alive)
+        .map(o => o.userID)) || []
+
+        return aliveUserIDs.indexOf(currentUser.userID) !== -1
+    }
 )
 
 export const selectRoomUsers = createSelector(
@@ -30,23 +46,13 @@ export const selectAppScreen = createSelector (
     [selectCurrentUser],
     (user) => !user ? AppScreens.joinRoom : AppScreens.gameRoom
 )
-// export const selectCartItems = createSelector(
-//   [selectCartReducer],
-//   (cart) => cart.cartItems
-// );
 
-// export const selectIsCartOpen = createSelector(
-//   [selectCartReducer],
-//   (cart) => cart.isCartOpen
-// );
-
-// export const selectCartCount = createSelector([selectCartItems], (cartItems) =>
-//   cartItems.reduce((total, cartItem) => total + cartItem.quantity, 0)
-// );
-
-// export const selectCartTotal = createSelector([selectCartItems], (cartItems) =>
-//   cartItems.reduce(
-//     (total, cartItem) => total + cartItem.quantity * cartItem.price,
-//     0
-//   )
-// );
+export const selectGameScreens = createSelector (
+    [selectRoom, selectCurrentUser],
+    (room, user) => { 
+        if (room && user) {
+            return getScreenForState(room, user)
+        }
+        return GameScreen.waitForNextGameScreen;
+    }
+)

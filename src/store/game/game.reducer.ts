@@ -8,13 +8,13 @@ import {
   updateRoomActionCreator,
 } from './game.action';
 
-export type GameState = {
+export type AppState = {
   readonly currentUser: RoomUser | null;
   readonly roomID: string | null;
   readonly room: Room | null;
 };
 
-const INITIAL_STATE: GameState = {
+const INITIAL_STATE: AppState = {
   currentUser: null,
   roomID: null,
   room: null

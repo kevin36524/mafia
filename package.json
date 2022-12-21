@@ -1,5 +1,6 @@
 {
   "name": "mafia",
+  "homepage": "/mafia",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

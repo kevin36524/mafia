@@ -23,3 +23,17 @@ export const deleteRoomAPICall = async (roomID:string) => {
       const content = await rawResponse.json();
       return content;
 }
+
+export const updateRoomAPICall = async (roomObj: any) => {
+  console.log("I am in updateRoomAPI call");
+  const rawResponse = await fetch('https://us-central1-hriyaan-24ae1.cloudfunctions.net/updateRoom', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({roomObj})
+  });
+  const content = await rawResponse.json();
+  return content;
+}

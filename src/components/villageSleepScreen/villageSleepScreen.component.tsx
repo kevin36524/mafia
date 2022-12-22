@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { doctorSaveActionCreator, policeDoneActionCreator, showMafiaResultActionCreator, wakeUpDoctorActionCreator, wakeUpMafiaActionCreator, wakeUpPoliceActionCreator } from "../../store/game/game.action"
 import { isCurrentUserAliveSelector, selectCurrentUser, selectRoom } from "../../store/game/game.selector"
-import { GamePlayerState, GameRole, GameState, GAME_ACTION_TYPES, RoomUserRole } from "../../store/game/game.types"
+import { GamePlayerState, GameRole, GameState, RoomUserRole } from "../../store/game/game.types"
 import { DisabledScreen } from "../disableScreen/disableScreen.component"
 import { NavigationBar } from "../navigationBar/navbar.component"
 import { StatusScreen } from "../statusScreen/statusScreen.component"

@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { selectRoomUsers, selectCurrentUser, selectRoom } from '../../store/game/game.selector';
@@ -7,7 +7,7 @@ import {
   GameRoomContainer,
 } from './gameRoomScreen.styled';
 import { RoomUserRole } from '../../store/game/game.types';
-import { startGameActionCreator } from '../../store/game/game.action';
+import { deleteUserActionCreator, startGameActionCreator } from '../../store/game/game.action';
 import FormInput from '../form-input/form-input.component';
 import { InvertedButton } from '../button/button.styles';
 import { UserList } from '../userList/userList.component';
@@ -43,11 +43,26 @@ const GameRoomScreen = () => {
     setFormFields({ ...formFields, [name]: value });
   };
 
+  const removeUser = (userID:string) => {
+    if (isHost && room) {
+      dispatch(deleteUserActionCreator(room, userID));
+    }
+  }
+
+  useEffect(()=>{
+    console.log("KEVINDEBUG I am in roomUser useEffect");
+    if (currentUser && room) {
+      if (roomUserIDs.indexOf(currentUser.userID) === -1) {
+        document.location.href = document.location.origin + document.location.pathname + `?room=${room.id}`
+      }
+    }
+  },[roomUsers])
+
   return (
     <GameRoomContainer>
-      <h2> Game Room {room?.id ?? ""} </h2>
+      <h2> Game Room {room?.id ?? ""}, User {currentUser?.userName ?? ""} </h2>
 
-      <UserList userIDs={roomUserIDs}/>
+      <UserList userIDs={roomUserIDs} onClick={removeUser} />
       {  isHost ? (
         <form onSubmit= {handleSubmit}>
           <FormInput 

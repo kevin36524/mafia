@@ -120,6 +120,15 @@ export const endGame = (room:Room) : Room => {
     return newRoom
 }
 
+export const removeUser = (room:Room, userID:string): Room => {
+    const newRoom = {...room}
+    if (!newRoom.users[userID]) {
+        return newRoom
+    }
+    delete newRoom.users[userID]
+    return newRoom
+}
+
 export const openVillageVoting = (room:Room) : Room => {
     const newRoom = {...room}
     if (!newRoom.game) {

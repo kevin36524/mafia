@@ -1,4 +1,4 @@
-import { useState, FormEvent, ChangeEvent } from 'react';
+import { useState, FormEvent, ChangeEvent, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
 import FormInput from '../form-input/form-input.component';
@@ -17,9 +17,25 @@ const JoinRoomScreen = () => {
   const { roomName, userName } = formFields;
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    const roomName = params.get("room") as string || "";
+    const userName = params.get("user") as string || "";
+
+    if (roomName.length > 0 && userName.length > 0) {
+      dispatch(joinRoomStartActionCreator(roomName, userName));
+      return;
+    }
+
+    setFormFields({roomName, userName})
+
+  }, []);
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     dispatch(joinRoomStartActionCreator(roomName, userName));
+    document.location.href = document.location.origin + document.location.pathname + `?room=${roomName}&user=${userName}`; 
   };
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {

@@ -14,6 +14,7 @@ import { doctorSave,
   villagerKillVote,
   freezeVillageVote,
   putVillageToSleep,
+  removeUser,
  } from '../../utils/game.utils';
 
 
@@ -35,6 +36,7 @@ import {
   villagerCastKillVoteActionType,
   freezeVillageVoteActionType,
   putVillageToSleepActionType,
+  deleteUserActionType,
 } from './game.action';
 
 import { GAME_ACTION_TYPES } from './game.types';
@@ -116,6 +118,12 @@ export function* putVillageToSleepAsync({payload:{room}}: putVillageToSleepActio
   const newRoom = yield* call(putVillageToSleep, room)
   yield* call(updateRoomAPICall, newRoom)
 }
+
+export function* removeUserFromRoomAsync({payload:{room, userID}}: deleteUserActionType) {
+  const newRoom = yield* call(removeUser, room, userID)
+  yield* call(updateRoomAPICall, newRoom)
+} 
+
 export function* onJoinRoomStart() { yield* takeLatest(GAME_ACTION_TYPES.JOIN_ROOM_START, joinRoomAsync); }
 export function* onStartGame() { yield* takeLatest(GAME_ACTION_TYPES.START_GAME, startRoomAsync); }
 export function* onWakeUpMafia() { yield* takeLatest(GAME_ACTION_TYPES.WAKEUP_MAFIA, wakeUpMafiaAsync); }
@@ -131,7 +139,7 @@ export function* onOpenVillageVote() { yield* takeLatest(GAME_ACTION_TYPES.OPEN_
 export function* onVillagerKillVote() { yield* takeLatest(GAME_ACTION_TYPES.VILLAGER_KILL_VOTE, villagerKillVoteAsync); }
 export function* onFreezeVillageVote() { yield* takeLatest(GAME_ACTION_TYPES.FREEZE_VILLAGE_VOTE, freezeVillageVoteAsync); }
 export function* onPutVillageToSleep() { yield* takeLatest(GAME_ACTION_TYPES.PUT_VILLAGE_TO_SLEEP, putVillageToSleepAsync); }
-
+export function* onRemoveUser() { yield* takeLatest(GAME_ACTION_TYPES.DELETE_USER, removeUserFromRoomAsync); }
 
 
 
@@ -150,6 +158,7 @@ export function* categoriesSaga() {
     call(onOpenVillageVote), 
     call(onVillagerKillVote),
     call(onFreezeVillageVote),
-    call(onPutVillageToSleep)
+    call(onPutVillageToSleep),
+    call(onRemoveUser)
   ]);
 }

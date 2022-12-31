@@ -5,6 +5,7 @@ export enum GAME_ACTION_TYPES {
 
     UPDATE_ROOM = "game/UPDATE_ROOM",
     DELETE_ROOM = "game/DELETE_ROOM",
+    DELETE_USER = "game/DELETE_USER",
 
     START_GAME = "game/START_GAME", //roomUsers + numOfMafia
     WAKEUP_MAFIA = "game/WAKEUP_MAFIA",
